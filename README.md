@@ -136,7 +136,7 @@ python gradio_demo.py \
     --share
 ```
 
-## 📊 Available Configurations
+## Available Configurations
 
 ### LoRA Variants
 - `lora_r32`: Rank 32 (recommended for quick iteration)
