@@ -2,7 +2,7 @@
 
 This project implements parameter-efficient fine-tuning techniques (LoRA, DoRA, HyperLoRA) for generating authentic Madhubani folk art using Stable Diffusion.
 
-## 📋 Project Overview
+## Project Overview
 
 Based on the research paper "Fine-Tuning Generative Model for Madhubani Art Synthesis using LoRA", this implementation provides:
 
@@ -18,7 +18,7 @@ Based on the research paper "Fine-Tuning Generative Model for Madhubani Art Synt
 - **Minimum Dataset**: 20 images for acceptable results, 50 for professional quality
 - **Recommended LoRA Scale**: 1.3-1.5 for inference
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Installation
 
@@ -154,7 +154,7 @@ python gradio_demo.py \
 ### Stable Diffusion v3
 - `sdv3_base`: For SD v3 experiments
 
-## 🔧 Advanced Usage
+## Advanced Usage
 
 ### Custom Training Configuration
 
@@ -217,7 +217,7 @@ analyze_dataset_size_impact(
 )
 ```
 
-## 📈 Expected Results
+## Expected Results
 
 ### Training Times (on RTX 6000 Ada, 30 epochs, 50 images)
 | Method | Rank | Time | Peak VRAM | Model Size |
@@ -242,7 +242,7 @@ analyze_dataset_size_impact(
 | 20 images | 0.0798 | 0.0889 | Acceptable |
 | 50 images | 0.0945 | 0.0383 | Optimal |
 
-## 🎨 Inference Tips
+## Inference Tips
 
 ### Prompt Engineering
 Always include these elements in your prompts:
@@ -265,7 +265,7 @@ blurry, low quality, distorted, western style, realistic photo, modern art,
 - **LoRA Scale**: 1.3-1.5 (higher for stronger Madhubani style)
 - **Scheduler**: DPM++ 2M Karras (best quality/speed)
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Out of Memory
 ```bash
@@ -304,7 +304,7 @@ ls -R ./output_dir
 python inference.py --model_path ./output_dir/lora_weights --base_model runwayml/stable-diffusion-v1-5
 ```
 
-## 📚 Project Structure
+## Project Structure
 
 ```
 madhubani-art-finetuning/
@@ -324,7 +324,7 @@ madhubani-art-finetuning/
 └── logs/                   # Training logs
 ```
 
-## 🎯 Recommended Workflows
+## Recommended Workflows
 
 ### Workflow 1: Quick Prototype
 ```bash
@@ -372,14 +372,14 @@ python gradio_demo.py \
     --names "LoRA r=32" "LoRA r=64" "DoRA r=32" "DoRA r=64"
 ```
 
-## 📖 References
+## References
 
 - [LoRA: Low-Rank Adaptation](https://arxiv.org/abs/2106.09685)
 - [DoRA: Weight-Decomposed Low-Rank Adaptation](https://arxiv.org/abs/2402.09353)
 - [Stable Diffusion](https://arxiv.org/abs/2112.10752)
 - [PEFT Library](https://github.com/huggingface/peft)
 
-## 🤝 Contributing
+## Contributing
 
 This implementation is based on the research paper and can be extended with:
 - Multi-style learning (different Madhubani sub-styles)
@@ -387,11 +387,11 @@ This implementation is based on the research paper and can be extended with:
 - Additional PEFT methods
 - Cross-cultural art style transfer
 
-## 📝 License
+## License
 
 This project is for educational and research purposes. The Madhubani art tradition belongs to the Mithila region and its artists.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Traditional Mithila artists who created the original art form
 - Anthropic for Claude and AI development tools
