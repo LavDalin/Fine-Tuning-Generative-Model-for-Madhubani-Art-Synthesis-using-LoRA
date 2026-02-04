@@ -1,7 +1,3 @@
-"""
-Dataset preparation and loading utilities for Madhubani Art
-"""
-
 import os
 import json
 import random
