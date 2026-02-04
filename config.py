@@ -1,8 +1,3 @@
-"""
-Configuration file for Madhubani Art Fine-Tuning
-Contains all hyperparameters and settings for LoRA, DoRA, and HyperLoRA training
-"""
-
 from dataclasses import dataclass
 from typing import Optional, List
 
