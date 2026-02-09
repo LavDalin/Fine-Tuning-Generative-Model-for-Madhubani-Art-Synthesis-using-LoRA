@@ -1,12 +1,12 @@
 # Madhubani Art Fine-Tuning Project - Complete Implementation
 
-## 📋 Project Overview
+## Project Overview
 
 This is a complete implementation of the research paper **"Fine-Tuning Generative Model for Madhubani Art Synthesis using LoRA"** from EECS 242 Advanced Topics in Deep Learning.
 
 The project explores parameter-efficient fine-tuning techniques (LoRA, DoRA, HyperLoRA) for generating authentic Madhubani folk art using Stable Diffusion models.
 
-## 🎯 Key Results from Paper
+## Key Results
 
 | Method | Rank | Training Time | Best Loss | Model Size | Verdict |
 |--------|------|---------------|-----------|------------|---------|
@@ -31,7 +31,7 @@ The project explores parameter-efficient fine-tuning techniques (LoRA, DoRA, Hyp
 3. **Minimum Dataset**: 20 images (acceptable), 50 images (professional)
 4. **Inference Settings**: LoRA scale 1.3-1.5, DPM++ scheduler
 
-## 📦 Complete File List
+## Complete File List
 
 ### Core Training & Inference
 - `train_lora.py` - Main training script for LoRA/DoRA (400+ lines)
@@ -55,7 +55,7 @@ The project explores parameter-efficient fine-tuning techniques (LoRA, DoRA, Hyp
 - `run_experiments.sh` - Replicate all paper experiments
 - `examples.py` - 10 usage examples with code
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Install
 ```bash
@@ -88,7 +88,7 @@ python inference.py \
     --prompt "madhubani art painting, sacred elephant with traditional jewelry"
 ```
 
-## 🎨 Model Configurations
+## Model Configurations
 
 ### Available Presets
 
@@ -100,7 +100,7 @@ python inference.py \
 **DoRA Variants:**
 - `dora_r16` - Rank 16 (most efficient)
 - `dora_r32` - Rank 32 (balanced)
-- `dora_r64` - Rank 64 (best quality) ⭐
+- `dora_r64` - Rank 64 (best quality) 
 
 **Experimental:**
 - `hyperlora_r8` - Rank 8 (context-aware, longer training)
@@ -137,7 +137,7 @@ This script will:
 
 **Total time**: ~30-45 minutes (depending on GPU)
 
-## 🔬 Evaluation Tools
+## Evaluation Tools
 
 ### Analyze Training
 ```bash
@@ -163,7 +163,7 @@ analyze_dataset_size_impact(
 )
 ```
 
-## 🌐 Interactive Demo
+## Interactive Demo
 
 Launch web interface to compare models:
 
@@ -180,7 +180,7 @@ Features:
 - Predefined Madhubani prompts
 - Real-time parameter adjustment
 
-## 💡 Usage Examples
+## Usage Examples
 
 ### Example 1: Basic Training
 ```bash
@@ -239,7 +239,7 @@ create_caption_file(
 )
 ```
 
-## 🛠️ Advanced Features
+## Advanced Features
 
 ### Custom Configuration
 ```python
@@ -273,7 +273,7 @@ validate_dataset("./madhubani_dataset")
 calculate_dataset_statistics("./madhubani_dataset")
 ```
 
-## 📈 Performance Benchmarks
+## Performance Benchmarks
 
 ### Hardware Requirements
 - **Minimum**: 16GB GPU VRAM (NVIDIA RTX 3090/4090)
@@ -290,7 +290,7 @@ calculate_dataset_statistics("./madhubani_dataset")
 - Batch of 4: ~5-6 seconds total
 - Can generate 100+ images in < 3 minutes
 
-## 🎓 Research Implementation Details
+## Research Implementation Details
 
 This implementation faithfully reproduces the paper's methodology:
 
@@ -313,18 +313,18 @@ This implementation faithfully reproduces the paper's methodology:
 - Preprocessing: Center crop, normalize
 - Augmentation: Optional horizontal flip
 
-## 🔍 Key Implementation Features
+## Key Implementation Features
 
-✅ **Complete Paper Reproduction**: All experiments from the research
-✅ **Production Ready**: Efficient inference, model merging
-✅ **Easy to Use**: Simple CLI, sensible defaults
-✅ **Well Documented**: Extensive README, code comments
-✅ **Flexible**: Custom configs, multiple schedulers
-✅ **Interactive**: Gradio web interface
-✅ **Validated**: Dataset checking, error handling
-✅ **Trackable**: W&B integration, tensorboard logs
+**Complete Paper Reproduction**: All experiments from the research
+**Production Ready**: Efficient inference, model merging
+**Easy to Use**: Simple CLI, sensible defaults
+**Well Documented**: Extensive README, code comments
+**Flexible**: Custom configs, multiple schedulers
+**Interactive**: Gradio web interface
+**Validated**: Dataset checking, error handling
+**Trackable**: W&B integration, tensorboard logs
 
-## 📚 Additional Resources
+## Additional Resources
 
 ### Documentation
 - `README.md` - Full documentation (300+ lines)
@@ -342,7 +342,7 @@ This implementation faithfully reproduces the paper's methodology:
 - `gradio_demo.py` - Interactive interface
 - `dataset.py` - Data preprocessing
 
-## 🎯 Use Cases
+## Use Cases
 
 1. **Cultural Heritage Preservation**: Generate authentic traditional art
 2. **Art Education**: Learn Madhubani patterns and styles
@@ -350,20 +350,20 @@ This implementation faithfully reproduces the paper's methodology:
 4. **Research**: Study PEFT methods for cultural art
 5. **Product Design**: Madhubani-inspired graphics
 
-## 🙏 Credits
+## Credits
 
 - **Research**: EECS 242 Final Project by Lavanya Dalin Annappa
 - **Implementation**: Complete code recreation with enhancements
 - **Art Form**: Traditional Mithila artists (2,500+ year tradition)
 - **Tools**: Stable Diffusion, LoRA, HuggingFace libraries
 
-## 📝 License
+## License
 
 Educational and research purposes. Madhubani art belongs to the Mithila region and its traditional artists.
 
 ---
 
-## 🚀 Get Started Now
+## Get Started Now
 
 ```bash
 # 1. Install
@@ -383,4 +383,4 @@ python gradio_demo.py --models ./output_dora_r64 --share
 
 For detailed instructions, see `QUICKSTART.md` or `README.md`.
 
-Happy generating! 🎨
+Happy generating!
