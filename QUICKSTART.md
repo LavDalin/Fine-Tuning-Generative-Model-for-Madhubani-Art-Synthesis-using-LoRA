@@ -1,6 +1,6 @@
 # Quick Start Guide - Madhubani Art Fine-Tuning
 
-## 🚀 Get Started in 5 Minutes
+## Get Started in 5 Minutes
 
 ### Step 1: Install Dependencies (2 minutes)
 
@@ -70,7 +70,7 @@ That's it! Check `generated_images/` for your results.
 
 ---
 
-## 📊 Next Steps
+## Next Steps
 
 ### Train Better Models
 
@@ -111,16 +111,16 @@ chmod +x run_experiments.sh
 
 ---
 
-## 🎨 Generation Tips
+## Generation Tips
 
 ### Best Prompts
 Always include:
-- ✅ "madhubani art painting" (trigger phrase)
-- ✅ Subject description
-- ✅ "intricate geometric patterns"
-- ✅ "double-line borders"
-- ✅ Color names
-- ✅ "traditional Indian folk art"
+- "madhubani art painting" (trigger phrase)
+- Subject description
+- "intricate geometric patterns"
+- "double-line borders"
+- Color names
+- "traditional Indian folk art"
 
 ### Best Settings
 - **Steps**: 25-30
@@ -143,7 +143,7 @@ python inference.py \
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Out of Memory?
 ```python
@@ -169,7 +169,7 @@ pip install xformers
 
 ---
 
-## 📁 File Structure
+## File Structure
 
 ```
 madhubani-art-finetuning/
@@ -190,7 +190,7 @@ madhubani-art-finetuning/
 
 ---
 
-## 💡 Common Commands Cheat Sheet
+## Common Commands Cheat Sheet
 
 ```bash
 # Basic training
@@ -222,7 +222,7 @@ python utils.py
 
 ---
 
-## 📚 Learn More
+## Learn More
 
 - **Full Documentation**: See `README.md`
 - **Example Code**: Run `python examples.py`
@@ -231,11 +231,11 @@ python utils.py
 
 ---
 
-## 🆘 Need Help?
+## Need Help?
 
 1. Check `README.md` for detailed docs
 2. Run `python examples.py` for code samples
 3. See troubleshooting section above
 4. Review the paper's methodology
 
-Happy generating! 🎨
+Happy generating!
