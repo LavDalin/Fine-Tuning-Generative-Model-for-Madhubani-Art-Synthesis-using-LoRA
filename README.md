@@ -1,5 +1,7 @@
 # Madhubani Art Fine-Tuning with LoRA/DoRA
 
+Hey everyone! So for my deep learning class project, I tackled something really close to my heart, using AI to preserve a 2,500-year-old Indian folk art tradition called Madhubani painting. These are not just pretty pictures, they are intricate geometric masterpieces with distinctive double-line borders and symbolic patterns that general AI models completely mess up.
+
 This project implements parameter-efficient fine-tuning techniques (LoRA, DoRA, HyperLoRA) for generating authentic Madhubani folk art using Stable Diffusion.
 
 ## Project Overview
