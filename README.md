@@ -4,6 +4,8 @@ Hey everyone! So for my deep learning class project, I tackled something really 
 
 This project implements parameter-efficient fine-tuning techniques (LoRA, DoRA, HyperLoRA) for generating authentic Madhubani folk art using Stable Diffusion.
 
+In order to create authentic Madhubani paintings using Stable Diffusion models, this project explores parameter-efficient fine-tuning techniques. Three adaptation methods—Low-Rank Adaptation, Weight-Decomposed Low-Rank Adaptation, and HyperLoRA were carefully compared with different rank values and data set sizes.
+
 ## Project Overview
 
 Based on the research paper "Fine-Tuning Generative Model for Madhubani Art Synthesis using LoRA", this implementation provides:
