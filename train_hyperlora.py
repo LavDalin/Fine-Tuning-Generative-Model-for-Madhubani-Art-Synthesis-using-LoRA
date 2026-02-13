@@ -5,8 +5,23 @@ This is a simplified implementation of the HyperLoRA concept
 
 import torch
 import torch.nn as nn
-from typing import Optional
-from train_lora import *  # Import base training utilities
+import os
+import types
+from typing import Optional, List
+from dataclasses import dataclass, field
+from train_lora import * # This must contain MadhubaniDataset
+
+
+from diffusers import UNet2DConditionModel, AutoencoderKL, DDPMScheduler
+from transformers import CLIPTextModel, CLIPTokenizer
+
+@dataclass
+class HyperLoRAConfig:
+    rank: int = 8
+    target_modules: List[str] = field(default_factory=lambda: ["to_q", "to_k", "to_v", "to_out.0"])
+    hypernetwork_hidden_size: int = 256
+    hypernetwork_num_layers: int = 2
+    alpha: float = 1.0
 
 
 class HyperNetwork(nn.Module):
@@ -143,13 +158,13 @@ def create_hyperlora_model(
     hypernetworks = nn.ModuleDict()
     
     # Find all target modules in the UNet
+    # Find all target modules in the UNet
     for name, module in unet.named_modules():
-        # Check if this is a target module
         if any(target in name for target in config.target_modules):
             if isinstance(module, nn.Linear):
                 # Create hypernetwork for this layer
                 hypernet = HyperNetwork(
-                    input_dim=768,  # CLIP text embedding dimension
+                    input_dim=768,
                     hidden_dim=config.hypernetwork_hidden_size,
                     num_layers=config.hypernetwork_num_layers,
                     lora_rank=config.rank,
@@ -157,9 +172,20 @@ def create_hyperlora_model(
                     target_dim_b=module.out_features,
                 )
                 
-                hypernetworks[name] = hypernet
+                # SANITIZE THE NAME: Replace "." with "_" for ModuleDict compatibility
+                safe_name = name.replace(".", "_")
+                hypernetworks[safe_name] = hypernet
                 
-                print(f"Added HyperLoRA to {name}: {module.in_features} -> {module.out_features}, rank={config.rank}")
+                # IMPORTANT: Wrap the original layer with HyperLoRALayer
+                # This actually injects your custom logic into the UNet
+                parent_name = name.rsplit('.', 1)[0] if '.' in name else ''
+                child_name = name.split('.')[-1]
+                parent = unet.get_submodule(parent_name)
+                
+                wrapped_layer = HyperLoRALayer(module, hypernet, alpha=config.alpha)
+                setattr(parent, child_name, wrapped_layer)
+
+                print(f"Added HyperLoRA to {name} (as {safe_name})")
     
     return unet, hypernetworks
 
@@ -174,13 +200,86 @@ def create_hyperlora_model(
 # 3. Implement proper gradient flow through the hypernetworks
 # 4. Add regularization to prevent overfitting
 
-# The paper's full implementation is more complex and may require 
-# custom CUDA kernels for efficiency.
+def load_models(model_id):
+    tokenizer = CLIPTokenizer.from_pretrained(model_id, subfolder="tokenizer")
+    noise_scheduler = DDPMScheduler.from_pretrained(model_id, subfolder="scheduler")
+    text_encoder = CLIPTextModel.from_pretrained(model_id, subfolder="text_encoder")
+    vae_model = AutoencoderKL.from_pretrained(model_id, subfolder="vae")
+    unet = UNet2DConditionModel.from_pretrained(model_id, subfolder="unet")
+    return tokenizer, noise_scheduler, text_encoder, unet, vae_model
 
+def train_hyper():
+    # 1. Configuration
+    config = HyperLoRAConfig(rank=8)
+    output_dir = "./output_hyperlora_r8"
+    os.makedirs(output_dir, exist_ok=True)
+    device = "cuda"
+    weight_dtype = torch.float16
+    
+    # 2. Load Models
+    tokenizer, noise_scheduler, text_encoder, unet, vae = load_models("runwayml/stable-diffusion-v1-5")
+    
+    # 3. Setup Dataset
+    train_dataset = MadhubaniDataset(data_dir="./madhubani_dataset", tokenizer=tokenizer, size=512)
+    train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=4, shuffle=True)
+
+    # 4. Inject HyperLoRA Layers
+    unet, hypernets = create_hyperlora_model(unet, config)
+    
+    # Move to GPU
+    vae.to(device, dtype=weight_dtype)
+    text_encoder.to(device, dtype=weight_dtype)
+    unet.to(device, dtype=weight_dtype)
+    hypernets.to(device, dtype=weight_dtype)
+
+    # 5. Monkey Patch UNet (Now correctly indented inside train_hyper)
+    original_forward = unet.forward
+    def patched_forward(self, sample, timestep, encoder_hidden_states, context=None, **kwargs):
+        # We ensure 'context' is accessible to the sub-layers
+        return original_forward(sample, timestep, encoder_hidden_states, **kwargs)
+
+    unet.forward = types.MethodType(patched_forward, unet)
+
+    # 6. Optimizer
+    optimizer = torch.optim.AdamW(hypernets.parameters(), lr=5e-5)
+
+    print(f"Starting HyperLoRA r=8 training on {len(train_dataset)} images...")
+
+    # 7. Training Loop
+    for epoch in range(30):
+        unet.train()
+        hypernets.train()
+        epoch_loss = 0
+        
+        for batch in train_dataloader:
+            # 1. Convert images to latents
+            pixel_values = batch["pixel_values"].to(device, dtype=weight_dtype)
+            latents = vae.encode(pixel_values).latent_dist.sample() * 0.18215
+
+            # 2. Match noise and noisy_latents to weight_dtype
+            noise = torch.randn_like(latents).to(device, dtype=weight_dtype)
+            timesteps = torch.randint(0, noise_scheduler.config.num_train_timesteps, (latents.shape[0],), device=device)
+            noisy_latents = noise_scheduler.add_noise(latents, noise, timesteps).to(device, dtype=weight_dtype)
+
+            # 3. Ensure context is the right dtype
+            input_ids = batch["input_ids"].to(device)
+            encoder_hidden_states = text_encoder(input_ids)[0].to(device, dtype=weight_dtype)
+
+            # 4. Predict
+            model_pred = unet(noisy_latents, timesteps, encoder_hidden_states, context=encoder_hidden_states).sample
+
+            loss = torch.nn.functional.mse_loss(model_pred.float(), noise.float(), reduction="mean")
+            
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+            epoch_loss += loss.item()
+
+        print(f"Epoch {epoch} complete. Loss: {epoch_loss / len(train_dataloader):.4f}")
+
+    # 8. Save
+    torch.save(hypernets.state_dict(), os.path.join(output_dir, "hyperlora_weights.pt"))
+    print(f"Weights saved to {output_dir}")
 
 if __name__ == "__main__":
-    print("HyperLoRA training script")
-    print("Note: This is a simplified implementation demonstrating the concept")
-    print("For production use, consider using the official HyperLoRA implementation")
-    print()
-    print("To train with standard LoRA or DoRA, use train_lora.py instead")
+    train_hyper()
